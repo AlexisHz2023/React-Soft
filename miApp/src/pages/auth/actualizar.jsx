@@ -59,7 +59,7 @@ const Actualizar = () => {
               value={tipoDocumento}
               onChange={(e) => setTipoDocumento(e.target.value)}
             >
-              <option value="" disabled>Select the document type</option>
+              <option value="" disabled>Seleccione Tipo Documento</option>
               <option value="cc">Cédula de Ciudadanía</option>
               <option value="ti">Tarjeta de Identidad</option>
               <option value="pasaporte">Pasaporte</option>
