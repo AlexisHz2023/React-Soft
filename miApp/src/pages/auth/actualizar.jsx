@@ -1,41 +1,103 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Actualizar = () => {
-  return ( 
-    <div className='font-sans absolute w-[62rem] bg-white h-[550px] rounded-xl right-[400px]  <button class="bg-gray-500 shadow-lg shadow-gray-500/50 font-sans	'>
-      <img className='text-center absolute left-[25px] top-[20px] w-[215px] h-[55px]' src='../imagenes/Logo.png' ></img>
-      <p className='text-center py-14 font-sans	text-Third text-5xl'>Ingrese Sus Datos</p>
-      
-      <div className='text-center'>
-      <form action='/submi' method='post'>
-        <label></label>
-        <br></br>
-        <select className='bg-primary text-white w-[330px] h-[50px] rounded-xl' id="tipoDocumento" name="tipoDocumento" required>
-            <option value="" disabled selected>Selecciona el tipo de documento</option>
-            <option value="DNI">Cedula Extranjera</option>
-            <option value="Pasaporte">Pasaporte</option>
-            <option value="Cédula">Cédula Ciudadania</option>
-       </select>
-          <br></br>
-       <label></label>
-       <input className='bg-white w-[400px] h-[50px] border-4 relative top-4 border-4 border-indigo-200 border-x-indigo-500 rounded-lg' type="number" placeholder='Numero De Documento' id="numeroDocumento" name="numeroDocumento" required/>  
+  const [numeroDocumento, setNumeroDocumento] = useState("");
+  const [tipoDocumento, setTipoDocumento] = useState("");
+  const navigate = useNavigate();
 
-      </form>
-      </div>
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-      <input className='bg-primary text-white w-[140px] h-[50px] text-2xl absolute text-center left-[460px] top-[325px] rounded-lg' type="submit" value="enviar"></input>
+    if ([tipoDocumento, numeroDocumento].includes("")) {
+      toast.error("Todos los campos son obligatorios", {
+        position: "top-center",
+        theme: "light",
+      });
+      return;
+    }
+
+    if (tipoDocumento === "") {
+      toast.error("Seleccione el tipo de documento", {
+        position: "top-center",
+        theme: "light",
+      });
+      return;
+    }
+
+    if (numeroDocumento.length < 10) {
+      toast.warning("El número de documento debe tener al menos 10 dígitos", {
+        theme: "light",
+        position: "top-center"
+
+      });
+      return;
+    }
+
+    console.log("Toda la funcionalidad del login");
+    navigate("/versaldo");
+    
+  };
+
+  return (
+    <div className='flex flex-col font-sans absolute w-[60%] bg-white h-[70%] rounded-xl right-[20%] shadow-lg shadow-gray-500/40 overflow-hidden'> 
+        <img className='text-center absolute left-[25px] top-[20px] w-[18%] h-[10%]' src='../imagenes/Logo.png' alt="Logo"></img>
+        <div class=" w-[550px] h-[550px] bg-blue-500 absolute -top-[60%] right-0 rounded-full left-[80%] z-0" ></div>
+        <div class="absolute -top-[45%] w-[400px] h-[400px] right-0  left-[87%] bg-blue-300 rounded-full"></div>
+        <p className='text-center py-20 font-sans text-Third text-5xl'>Ingrese Sus Datos</p>
+
+        <div className='text-center -top-[5%] relative'>
+          <form onSubmit={handleSubmit} action='/submit' method='post'>
+            <label></label>
+            <br></br>
+            <select
+              className='bg-blue-500 text-white w-[330px] h-[50px] rounded-lg'
+              id="tipoDocumento"
+              name="tipoDocumento"
+              required
+              value={tipoDocumento}
+              onChange={(e) => setTipoDocumento(e.target.value)}
+            >
+              <option value="" disabled>Select the document type</option>
+              <option value="cc">Cédula de Ciudadanía</option>
+              <option value="ti">Tarjeta de Identidad</option>
+              <option value="pasaporte">Pasaporte</option>
+              <option value="extranjeria">Cédula de Extranjería</option>
+            </select>
+            <br></br>
+            <br />
+            <label></label>
+            <input
+              className='bg-slate-50 w-[400px] h-[50px] shadow-lg border-2 shadow-blue-500/40 rounded-lg relative top-4 '
+              type="number"
+              placeholder='Numero De Documento'
+              id="numeroDocumento"
+              name="numeroDocumento"
+              required
+              value={numeroDocumento}
+              onChange={(e) => setNumeroDocumento(e.target.value)}
+            />
+          </form>
+        </div>
+
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white w-[15%] h-[10%] left-[52%] relative top-[5%] py-4  rounded-lg hover:scale-105 transition-all hover:bg-Third"
+        >
+          Ingresar
+        </button>
+
+     
+      <button onClick={() => window.history.back()} className='bg-blue-500 relative -top-[5%] w-[15%] left-[33%] h-[10%] text-center text-white hover:scale-105 transition-all hover:bg-Third rounded-lg'>Volver</button>
+       
+
+      <div class=" w-[550px] h-[550px] bg-blue-500 absolute top-[70%] right-0 rounded-full -left-[300px] z-0" ></div>
+      <div class="absolute top-[80%] w-[400px] h-[400px] right-0  -left-[25%] bg-blue-300 rounded-full"></div>
       
-      <div className='relative bg-primary left-[300px] w-[140px] top-[50px] h-[50px] rounded-lg text-center'>
-        <Link
-        to="/"
-        ><p className='relative text-center py-2 text-2xl text-white'>Volver</p>
-        </Link>
-      </div>
+
     </div>
   )
-  
 }
 
-
-export default Actualizar
+export default Actualizar;
