@@ -1,51 +1,88 @@
-import React from 'react';
-import { useState } from "react";
-import Axios from "axios";
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
-import Menu from './Menu'
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import Axios from 'axios';
+import Menu from './Menu';
 
-const Alerta = withReactContent(Swal)
-
+const Alerta = withReactContent(Swal);
 
 const Admin = () => {
+  const [Nombre, setNombre] = useState('');
+  const [Correo, setCorreo] = useState('');
+  const [Usuario, setUsuario] = useState('');
+  const [Clave, setClave] = useState('');
+  const [Rol, setRol] = useState('');
+  const [id, setId] = useState('0');
+  const [imagen, setImagen] = useState(null);
+  const [Editar, setEditar] = useState(false);
+  const [usuariosList, setUsuarios] = useState([]);
 
-    const [Nombre,setNombre] = useState("");
-    const [Correo,setCorreo] = useState("");
-    const [Usuario,setUsuario] = useState("");
-    const [Clave,setClave] = useState("");
-    const [Rol,setRol] = useState("");
-    const [id,setId] = useState("0");
+  useEffect(() => {
+    getUsuarios();
 
-    const [Editar,setEditar] = useState(false);
+  }, []);
 
-    const [usuariosList,setUsuarios] = useState([]);
-
-    const add = ()=>{
-        Axios.post("http://localhost:3001/create",{
-            Nombre:Nombre,
-            Correo:Correo,
-            Usuario:Usuario,
-            Clave:Clave,
-            Rol:Rol
-        }).then(()=>{
-          getUsuarios();
-            LimpiarCampos();
-            Alerta.fire({
-              title: <strong>Creado Correctamente</strong>,
-              html: <i>El usuario {Nombre} fue registrado con éxito</i>,
-              icon: "success",
-              timer:3000
-            })
-            }).catch(function(error){
-              Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                footer: JSON.parse(JSON.stringify(error)).message==="Network Error"?"intente mas tarde":JSON.parse(JSON.stringify(error)).message
-              });
-        });
+  const handleImagenChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (file instanceof Blob) {
+        const imageUrl = URL.createObjectURL(file);
+    
+        setImagen(imageUrl);
+      } else {
+        console.error('El archivo seleccionado no es un Blob válido.');
+      }
+    } else {
+      console.error('No se ha seleccionado ningún archivo.');
     }
+  }
 
+  
+
+  const createObjectURLAsync = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  
+  const add = () => {
+    // Enviar la imagen directamente al servidor
+    Axios.post("http://localhost:3001/create", {
+      Nombre: Nombre,
+      Correo: Correo,
+      Usuario: Usuario,
+      Clave: Clave,
+      Rol: Rol,
+      Imagen: imagen // Pasar el Blob directamente
+    })
+      .then(() => {
+        getUsuarios();
+        LimpiarCampos();
+        Alerta.fire({
+          title: <strong>Creado Correctamente</strong>,
+          html: <i>El usuario {Nombre} fue registrado con éxito</i>,
+          icon: "success",
+          timer: 3000000
+        });
+      })
+      .catch(function (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          footer:
+            JSON.parse(JSON.stringify(error)).message === "Network Error"
+              ? "intente mas tarde"
+              : JSON.parse(JSON.stringify(error)).message
+        });
+      });
+  };
 
     const update = ()=>{
       Axios.put("http://localhost:3001/update",{
@@ -213,12 +250,32 @@ const Admin = () => {
                   setRol(event.target.value);
                  }} />
               </div>
+              <div>
+      <label className='' htmlFor="ImagenInput">
+        Selecciona una imagen</label> <br /> <br />
+      <input 
+        type="file"
+        onChange={handleImagenChange}
+        id="ImagenInput" 
+        name='imagen' 
+      />
+      {imagen && (
+        <div>
+          <p>Imagen seleccionada</p>
+          <img src={imagen}  alt="Imagen Seleccionada" />
+        </div>
+      )}
+    </div>
             
               <div className='flex items-start'>
               </div>
               {
+
+                
           Editar?
           <div>
+  
+            
           <button onClick={update}  className="w-full bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center   text-white">Actualizar</button> 
           <button onClick={LimpiarCampos}  className="w-full bg-blue-500 hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 top-4 relative text-center   text-white">Cancelar</button>
           </div>
@@ -232,6 +289,7 @@ const Admin = () => {
   <thead className='bg-primary border-b-2 border-gray-200 '>
     <tr className='relative h-[50px] text-white'>
       <th className='w-20 p-3 text-sm font-semibold  tracking-wide text-left'>#</th>
+      <th className='w-20 p-3 text-sm font-semibold  tracking-wide text-center'>Imagen</th>
       <th className='w-20 p-3 text-sm font-semibold  tracking-wide text-left'>Nombre</th>
       <th className='w-20 p-3 text-sm font-semibold  tracking-wide text-left'>Correo</th>
       <th className='w-20 p-3 text-sm font-semibold  tracking-wide text-left'>Usuario</th>
@@ -244,6 +302,9 @@ const Admin = () => {
     return (
       <tr key={val.id} className='bg-white'>
         <td className='p-3 text-sm whitespace-nowrap font-bold text-blue-500 hover:underline'>{val.id}</td>
+        <td className='p-3 text-sm whitespace-nowrap font-bold hover:underline'>
+  {val.Imagen ? <img src={val.Imagen} alt="Imagen" /> : 'Sin imagen'}
+</td>
         <td className='p-3 text-sm whitespace-nowrap font-bold  hover:underline'>{val.Nombre}</td>
         <td className='p-3 text-sm whitespace-nowrap font-bold  hover:underline'>{val.Correo}</td>
         <td className='p-3 text-sm whitespace-nowrap font-bold  hover:underline'>{val.Usuario}</td>

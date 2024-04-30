@@ -41,7 +41,7 @@ const Actualizar = () => {
   };
 
   return (
-    <div className='flex flex-col font-sans absolute w-[60%] bg-white h-[70%] rounded-xl right-[20%] shadow-lg shadow-gray-500/40 overflow-hidden '> 
+    <div className='flex flex-col font-sans absolute w-[60%] bg-white h-[70%] rounded-xl right-[20%] shadow-lg shadow-gray-500/40 overflow-hidden z-10 '> 
         <img className='text-center absolute left-[25px] top-[20px] w-[18%] h-[10%]' src='../imagenes/Logo.png' alt="Logo"></img>
         
         <p className='text-center py-20 font-sans text-Third text-5xl'>Ingrese Sus Datos</p>
@@ -104,7 +104,7 @@ const Actualizar = () => {
     preserveAspectRatio="none"
     viewBox="0 0 1200 120"
     xmlns="http://www.w3.org/2000/svg"
-    style={{ fill: '#F3B05F', width: '100%', height: 105, transform: 'rotate(180deg) scaleX(-1)' }}
+    style={{ fill: '#F3B05F', width: '100%', height: 110, transform: 'rotate(180deg) scaleX(-1)' }}
   >
     <path
     d="M0 0v46.29c47.79 22.2 103.59 32.17 158 28 70.36-5.37 136.33-33.31 206.8-37.5 73.84-4.36 147.54 16.88 218.2 35.26 69.27 18 138.3 24.88 209.4 13.08 36.15-6 69.85-17.84 104.45-29.34C989.49 25 1113-14.29 1200 52.47V0z"

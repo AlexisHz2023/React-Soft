@@ -19,8 +19,9 @@ app.post("/create",(req,res)=>{
     const Usuario = req.body.Usuario;
     const Clave = req.body.Clave;
     const Rol = req.body.Rol;
-
-    db.query('INSERT INTO usuarios(Nombre,Correo,Usuario,Clave,Rol) VALUES(?,?,?,?,?)',[Nombre,Correo,Usuario,Clave,Rol],
+    const Imagen = req.body.Imagen;
+    console.log(Imagen)
+    db.query('INSERT INTO usuarios(Nombre,Correo,Usuario,Clave,Rol,Imagen) VALUES(?,?,?,?,?,?)',[Nombre,Correo,Usuario,Clave,Rol,Imagen],
     (err,result)=>{
         if(err){
             console.log(err);
